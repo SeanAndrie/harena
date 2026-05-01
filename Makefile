@@ -6,7 +6,7 @@
 #    By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/01 23:56:20 by sgadinga          #+#    #+#              #
-#    Updated: 2026/05/02 01:57:18 by sgadinga         ###   ########.fr        #
+#    Updated: 2026/05/02 02:34:46 by sgadinga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ ARCHIVE := ar rcs
 SRC_DIR := src
 OBJ_DIR := obj
 
-SRCS := $(addprefix $(SRC_DIR)/, harena_create.c harena_alloc.c harena_reset.c harena_destroy.c harena_save.c harena_restore.c harena_calloc.c)
+SRCS := $(addprefix $(SRC_DIR)/, harena_init.c harena_create.c harena_alloc.c harena_save.c harena_restore.c harena_calloc.c harena_reset.c harena_destroy.c harena_free.c)
 OBJS := $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 all: $(NAME)

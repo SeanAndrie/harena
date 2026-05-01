@@ -6,17 +6,18 @@
 /*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/02 00:55:41 by sgadinga          #+#    #+#             */
-/*   Updated: 2026/05/02 02:20:23 by sgadinga         ###   ########.fr       */
+/*   Updated: 2026/05/02 02:25:42 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <harena.h>
 
-void        harena_destroy(t_harena *h)
+void	harena_destroy(t_harena *h)
 {
-    if (!h || !h->base)
-        return ;
-    free(h->base);
-    h->offset = 0;
-    h->capacity = 0;
+	if (!h || !h->base)
+		return ;
+	free(h->base);
+    h->base = NULL;
+	h->offset = 0;
+	h->capacity = 0;
 }

@@ -1,27 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   harena_create.c                                    :+:      :+:    :+:   */
+/*   harena_free.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/02 02:30:05 by sgadinga          #+#    #+#             */
-/*   Updated: 2026/05/02 02:33:44 by sgadinga         ###   ########.fr       */
+/*   Created: 2026/05/02 02:33:59 by sgadinga          #+#    #+#             */
+/*   Updated: 2026/05/02 02:34:25 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <harena.h>
 
-t_harena *harena_create(const size_t capacity)
+void    harena_free(t_harena *h)
 {
-    t_harena *h;
-
-    if (capacity == 0)
-        return (NULL);
-    h = malloc(sizeof(t_harena));
     if (!h)
-        return (NULL);
-    if (!harena_init(h, capacity))
-        return (free(h), NULL);
-    return (h);
+        return ;
+    harena_destroy(h);
+    free(h);
 }

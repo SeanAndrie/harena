@@ -32,50 +32,82 @@ static int	passed_tests = 0;
 
 void	test_create_success(void)
 {
-	t_harena	h;
+	t_harena	*h;
 
 	TEST("harena_create success");
 	h = harena_create(1024);
-	if (h.base && h.offset == 0 && h.capacity == 1024)
+	if (h && h->base && h->offset == 0 && h->capacity == 1024)
 		PASS();
 	else
-		FAIL("Expected valid base, offset=0, capacity=1024");
-	harena_destroy(&h);
+		FAIL("Expected valid arena with base, offset=0, capacity=1024");
+	harena_free(h);
 }
 
 void	test_create_zero_size(void)
 {
-	t_harena	h;
+	t_harena	*h;
 
 	TEST("harena_create zero size");
 	h = harena_create(0);
-	if (h.base == NULL && h.capacity == 0)
+	if (h == NULL)
 		PASS();
 	else
-		FAIL("Expected NULL base and capacity=0");
+		FAIL("Expected NULL for zero size");
 }
 
 void	test_create_malloc_failure(void)
 {
-	t_harena	h;
+	t_harena	*h;
 
 	TEST("harena_create malloc failure handling");
 	h = harena_create(SIZE_MAX);
-	if (h.base == NULL && h.capacity == 0)
+	if (h == NULL)
 		PASS();
 	else
-		FAIL("Expected NULL base on malloc failure");
+		FAIL("Expected NULL on malloc failure");
+}
+
+void	test_init_success(void)
+{
+	t_harena	h;
+
+	TEST("harena_init success");
+	if (harena_init(&h, 1024) == TRUE && h.base && h.offset == 0 && h.capacity == 1024)
+		PASS();
+	else
+		FAIL("Expected TRUE and valid initialized arena");
+	harena_destroy(&h);
+}
+
+void	test_init_null_arena(void)
+{
+	TEST("harena_init NULL arena");
+	if (harena_init(NULL, 1024) == FALSE)
+		PASS();
+	else
+		FAIL("Expected FALSE for NULL arena");
+}
+
+void	test_init_zero_size(void)
+{
+	t_harena	h;
+
+	TEST("harena_init zero size");
+	if (harena_init(&h, 0) == FALSE)
+		PASS();
+	else
+		FAIL("Expected FALSE for zero size");
 }
 
 void	test_alloc_basic(void)
 {
-	t_harena	h;
+	t_harena	*h;
 	void		*ptr;
 	int			*val;
 
 	TEST("harena_alloc basic allocation");
 	h = harena_create(1024);
-	ptr = harena_alloc(&h, sizeof(int));
+	ptr = harena_alloc(h, sizeof(int));
 	if (ptr)
 	{
 		val = (int *)ptr;
@@ -87,19 +119,19 @@ void	test_alloc_basic(void)
 	}
 	else
 		FAIL("Allocation returned NULL");
-	harena_destroy(&h);
+	harena_free(h);
 }
 
 void	test_alloc_alignment(void)
 {
-	t_harena	h;
+	t_harena	*h;
 	void		*ptr1, *ptr2;
 	size_t		align1, align2;
 
 	TEST("harena_alloc 8-byte alignment");
 	h = harena_create(1024);
-	ptr1 = harena_alloc(&h, 1);
-	ptr2 = harena_alloc(&h, 1);
+	ptr1 = harena_alloc(h, 1);
+	ptr2 = harena_alloc(h, 1);
 	if (ptr1 && ptr2)
 	{
 		align1 = (size_t)ptr1 % 8;
@@ -111,19 +143,19 @@ void	test_alloc_alignment(void)
 	}
 	else
 		FAIL("Allocation returned NULL");
-	harena_destroy(&h);
+	harena_free(h);
 }
 
 void	test_alloc_multiple(void)
 {
-	t_harena	h;
+	t_harena	*h;
 	void		*ptrs[10];
 	int			i;
 
 	TEST("harena_alloc multiple allocations");
 	h = harena_create(1024);
 	for (i = 0; i < 10; i++)
-		ptrs[i] = harena_alloc(&h, 16);
+		ptrs[i] = harena_alloc(h, 16);
 	if (ptrs[0] && ptrs[9])
 	{
 		for (i = 0; i < 10; i++)
@@ -132,22 +164,22 @@ void	test_alloc_multiple(void)
 	}
 	else
 		FAIL("Allocation returned NULL");
-	harena_destroy(&h);
+	harena_free(h);
 }
 
 void	test_alloc_full(void)
 {
-	t_harena	h;
+	t_harena	*h;
 	void		*ptr;
 
 	TEST("harena_alloc full arena");
 	h = harena_create(32);
-	ptr = harena_alloc(&h, 40);
+	ptr = harena_alloc(h, 40);
 	if (ptr == NULL)
 		PASS();
 	else
 		FAIL("Expected NULL on full arena");
-	harena_destroy(&h);
+	harena_free(h);
 }
 
 void	test_alloc_null_arena(void)
@@ -164,32 +196,32 @@ void	test_alloc_null_arena(void)
 
 void	test_alloc_zero_bytes(void)
 {
-	t_harena	h;
+	t_harena	*h;
 	void		*ptr;
 
 	TEST("harena_alloc zero bytes");
 	h = harena_create(1024);
-	ptr = harena_alloc(&h, 0);
+	ptr = harena_alloc(h, 0);
 	if (ptr == NULL)
 		PASS();
 	else
 		FAIL("Expected NULL for zero bytes");
-	harena_destroy(&h);
+	harena_free(h);
 }
 
 void	test_calloc_basic(void)
 {
-	t_harena	h;
+	t_harena	*h;
 	int			*ptr;
 
 	TEST("harena_calloc basic allocation");
 	h = harena_create(1024);
-	ptr = (int *)harena_calloc(&h, sizeof(int));
+	ptr = (int *)harena_calloc(h, sizeof(int));
 	if (ptr && *ptr == 0)
 		PASS();
 	else
 		FAIL("Expected zero-initialized memory");
-	harena_destroy(&h);
+	harena_free(h);
 }
 
 void	test_calloc_null_arena(void)
@@ -206,25 +238,25 @@ void	test_calloc_null_arena(void)
 
 void	test_save_restore(void)
 {
-	t_harena	h;
+	t_harena	*h;
 	size_t		snapshot;
 	int			*ptr1, *ptr2;
 
 	TEST("harena_save and harena_restore");
 	h = harena_create(1024);
-	ptr1 = (int *)harena_alloc(&h, sizeof(int));
-	snapshot = harena_save(&h);
-	ptr2 = (int *)harena_alloc(&h, sizeof(int));
+	ptr1 = (int *)harena_alloc(h, sizeof(int));
+	snapshot = harena_save(h);
+	ptr2 = (int *)harena_alloc(h, sizeof(int));
 	*ptr1 = 10;
 	*ptr2 = 20;
-	harena_restore(&h, snapshot);
-	ptr2 = (int *)harena_alloc(&h, sizeof(int));
+	harena_restore(h, snapshot);
+	ptr2 = (int *)harena_alloc(h, sizeof(int));
 	*ptr2 = 30;
 	if (*ptr1 == 10 && *ptr2 == 30)
 		PASS();
 	else
 		FAIL("Save/restore failed");
-	harena_destroy(&h);
+	harena_free(h);
 }
 
 void	test_save_null_arena(void)
@@ -248,21 +280,21 @@ void	test_restore_null_arena(void)
 
 void	test_reset(void)
 {
-	t_harena	h;
+	t_harena	*h;
 	int			*ptr1, *ptr2;
 
 	TEST("harena_reset");
 	h = harena_create(1024);
-	ptr1 = (int *)harena_alloc(&h, sizeof(int));
+	ptr1 = (int *)harena_alloc(h, sizeof(int));
 	*ptr1 = 42;
-	harena_reset(&h);
-	ptr2 = (int *)harena_alloc(&h, sizeof(int));
+	harena_reset(h);
+	ptr2 = (int *)harena_alloc(h, sizeof(int));
 	*ptr2 = 100;
 	if (*ptr2 == 100)
 		PASS();
 	else
 		FAIL("Reset failed");
-	harena_destroy(&h);
+	harena_free(h);
 }
 
 void	test_reset_null_arena(void)
@@ -277,7 +309,7 @@ void	test_destroy(void)
 	t_harena	h;
 
 	TEST("harena_destroy");
-	h = harena_create(1024);
+	harena_init(&h, 1024);
 	harena_destroy(&h);
 	if (h.base == NULL && h.capacity == 0 && h.offset == 0)
 		PASS();
@@ -292,32 +324,52 @@ void	test_destroy_null_arena(void)
 	PASS();
 }
 
+void	test_free(void)
+{
+	t_harena	*h;
+
+	TEST("harena_free");
+	h = harena_create(1024);
+	harena_free(h);
+	PASS();
+}
+
+void	test_free_null(void)
+{
+	TEST("harena_free NULL");
+	harena_free(NULL);
+	PASS();
+}
+
 void	test_alloc_after_reset(void)
 {
-	t_harena	h;
+	t_harena	*h;
 	int			*ptr;
 	int			i;
 
 	TEST("harena_alloc after reset");
 	h = harena_create(1024);
 	for (i = 0; i < 10; i++)
-		harena_alloc(&h, 16);
-	harena_reset(&h);
-	ptr = (int *)harena_alloc(&h, sizeof(int));
+		harena_alloc(h, 16);
+	harena_reset(h);
+	ptr = (int *)harena_alloc(h, sizeof(int));
 	*ptr = 99;
 	if (*ptr == 99)
 		PASS();
 	else
 		FAIL("Alloc after reset failed");
-	harena_destroy(&h);
+	harena_free(h);
 }
 
-	int	main(void)
+int	main(void)
 {
 	ft_printf("=== Arena Allocator Tests ===\n\n");
 	test_create_success();
 	test_create_zero_size();
 	test_create_malloc_failure();
+	test_init_success();
+	test_init_null_arena();
+	test_init_zero_size();
 	test_alloc_basic();
 	test_alloc_alignment();
 	test_alloc_multiple();
@@ -333,6 +385,8 @@ void	test_alloc_after_reset(void)
 	test_reset_null_arena();
 	test_destroy();
 	test_destroy_null_arena();
+	test_free();
+	test_free_null();
 	test_alloc_after_reset();
 	ft_printf("\n=== Results: %d/%d tests passed ===\n", passed_tests, total_tests);
 	return (passed_tests == total_tests ? 0 : 1);

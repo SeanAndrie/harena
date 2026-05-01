@@ -20,6 +20,9 @@ OBJS := $(SRCS:.c=.o)
 
 all: $(NAME)
 
+../libft/libft.a:
+	$(MAKE) -C ../libft
+
 $(NAME): $(OBJS) ../harena.a ../libft/libft.a
 	$(CC) $(OBJS) ../harena.a ../libft/libft.a -lm -o $@
 
