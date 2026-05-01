@@ -1,6 +1,6 @@
 # harena
 
-A custom arena allocator implementation in C.
+A simple arena allocator implementation in C.
 
 ## Description
 
