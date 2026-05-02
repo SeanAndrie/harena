@@ -84,4 +84,4 @@ make test
 
 ## Dependencies
 
-- [libft](https://github.com/42School/libft) - 42 School standard C library
+- [libft](https://github.com/SeanAndrie/libft-adapt) - 42 School standard C library
