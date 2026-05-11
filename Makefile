@@ -12,7 +12,7 @@
 
 NAME := harena.a
 CC := cc
-CFLAGS := -Wall -Werror -Wextra -Iincludes -Ilibft/includes
+CFLAGS := -Wall -Werror -Wextra -Iincludes -I../libft/includes
 ARCHIVE := ar rcs
 
 SRC_DIR := src

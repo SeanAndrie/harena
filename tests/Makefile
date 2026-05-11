@@ -24,7 +24,7 @@ all: $(NAME)
 	$(MAKE) -C ../libft
 
 $(NAME): $(OBJS) ../harena.a ../libft/libft.a
-	$(CC) $(OBJS) ../harena.a ../libft/libft.a -lm -o $@
+	$(CC) $(CFLAGS) $(OBJS) ../harena.a ../libft/libft.a -lm -o $@
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
