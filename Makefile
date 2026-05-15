@@ -6,11 +6,11 @@
 #    By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/01 23:56:20 by sgadinga          #+#    #+#              #
-#    Updated: 2026/05/02 02:34:46 by sgadinga         ###   ########.fr        #
+#    Updated: 2026/05/13 22:43:08 by sgadinga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME := harena.a
+NAME := libharena.a
 CC := cc
 CFLAGS := -Wall -Werror -Wextra -Iincludes -I../libft/includes
 ARCHIVE := ar rcs

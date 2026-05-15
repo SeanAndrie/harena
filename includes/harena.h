@@ -6,7 +6,7 @@
 /*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/02 00:01:16 by sgadinga          #+#    #+#             */
-/*   Updated: 2026/05/02 02:32:29 by sgadinga         ###   ########.fr       */
+/*   Updated: 2026/05/13 22:36:47 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,10 @@ typedef struct s_harena
 	size_t	offset;
 	size_t	capacity;
 }			t_harena;
+
+# define KiB(n) ((uint64_t) n << 10)
+# define MiB(n) ((uint64_t) n << 20)
+# define GiB(n) ((uint64_t) n << 30)
 
 t_harena	*harena_create(const size_t capacity);
 t_bool		harena_init(t_harena *h, const size_t size);
